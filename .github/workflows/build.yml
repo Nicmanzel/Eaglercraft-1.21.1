@@ -23,7 +23,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Build Web Client
-      run: ./gradlew build --no-daemon
+      run: gradlew build --no-daemon
       env:
         GRADLE_OPTS: "-Xmx6144m" # Allocates 6 GB of RAM to the Java build process
 

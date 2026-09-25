@@ -1,0 +1,37 @@
+name: Compile Minecraft Web Client
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: # Allows manual trigger from the GitHub web UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21' # Change to 17 or 8 depending on your build target
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: Make Gradle Wrapper Executable
+      run: chmod +x gradlew
+
+    - name: Build Web Client
+      run: ./gradlew build --no-daemon
+      env:
+        GRADLE_OPTS: "-Xmx6144m" # Allocates 6 GB of RAM to the Java build process
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-client-output
+        path: build/libs/ # Adjust this path if your output HTML/JS/WASM goes elsewhere
